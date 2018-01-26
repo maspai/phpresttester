@@ -8,13 +8,16 @@ new Vue({
 		url: '',
 		valueTypes: ['text', 'file'],
 		dataContainsFile: false,
-		result: ''
+		rawBody: false,
+		bodyType: '',
+		result: '',
+		sendTime: null,
+		responseTime: null
 	},
 	created: function () {
-		var v = this;
-		v.data.push(['',this.valueTypes[0],'']);
-		v.headers.push('');
-		v.method = v.reqMethods[0];
+		this.data.push(['',this.valueTypes[0],'']);
+		this.headers.push('');
+		this.method = this.reqMethods[0];
 	},
 	methods: {
 		addHeader: function (i) {
@@ -44,9 +47,39 @@ new Vue({
 				this.data.push(['',this.valueTypes[0],'']);
 			}
 		},
-		adjustTargetHeight: function () {
-			var target = $('#wrapper iframe[name=target]');
-			target.height(target.contents().height());
+		onBodyTypeChange: function () {
+			var mimeJson = 'content-type: application/json';
+			var idx = this.headers.findIndex(function (h) { return h.toLowerCase().indexOf('application/json') >= 0; });
+			if (idx >= 0) {
+				this.delHeader(idx);
+			}
+
+			if (this.bodyType == 'json') {
+				if (!this.headers[this.headers.length - 1]) {
+					this.headers[this.headers.length - 1] = mimeJson;
+				}
+				else {
+					this.headers.push(mimeJson);
+				}
+			}
+
+			this.rawBody = !!this.bodyType;
+		},
+		onResponse: function () {
+			if (this.sendTime) {
+				var target = $('#wrapper iframe[name=target]');
+				target.height(target.contents().height());
+
+				var respTime = new Date(new Date - this.sendTime);
+				this.responseTime = respTime.getSeconds() + ' s';
+				if (this.responseTime == '0 s') {
+					this.responseTime = respTime.getMilliseconds() + ' ms';
+				}
+			}
+		},
+		sendRequest: function () {
+			this.responseTime = null;
+			this.sendTime = new Date;
 		}
 	}
 });

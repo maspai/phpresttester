@@ -4,11 +4,18 @@ curl_setopt($ch, CURLOPT_URL, $_POST['url']);
 if ($_POST['method'] == 'POST') {
 	curl_setopt($ch, CURLOPT_POST, 1);
 }
-$post = [];
-foreach ($_POST['names'] as $i => $name) {
-	$post[$name] = $_POST['values'][$i];
+
+if (isset($_POST['raw'])) {
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $_POST['raw']);
 }
-curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+else {
+	$post = [];
+	foreach ($_POST['names'] as $i => $name) {
+		$post[$name] = $_POST['values'][$i];
+	}
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+}
+
 if ($headers = array_filter($_POST['headers'], function ($h) { return $h; })) {
 	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 }

@@ -23,11 +23,14 @@ endif
 	<table id="wrapper">
 		<tr style="background: lightgray;">
 			<th>Request</th>
-			<th>Response</th>
+			<th>
+				Response
+				<small style="font-weight: normal;" v-text="responseTime" v-if="responseTime !== null"></small>
+			</th>
 		</tr>
 		<tr>
 			<td style="width: 40%;">
-				<form method="post" target="target" :enctype="{'multipart/form-data': dataContainsFile}">
+				<form method="post" target="target" @submit="sendRequest()" :enctype="{'multipart/form-data': dataContainsFile}">
 					<select name="method" v-model="method">
 						<option v-for="m in reqMethods" v-text="m"></option>
 					</select>
@@ -51,9 +54,18 @@ endif
 					</table>
 					<table>
 						<thead>
-							<tr><th colspan="4">Body</th></tr>
+							<tr>
+								<th colspan="4">
+									Body
+									<select v-model="bodyType" @change="onBodyTypeChange()">
+										<option value="">form</option>
+										<option>json</option>
+										<option>raw</option>
+									</select>
+								</th>
+							</tr>
 						</thead>
-						<tbody>
+						<tbody v-if="!rawBody">
 							<tr v-for="(x,i) in data">
 								<td style="width: 40%;">
 									<input type="text" name="names[]" v-model="x[0]" placeholder="Name" autocomplete="off">
@@ -73,11 +85,16 @@ endif
 								</td>
 							</tr>
 						</tbody>
+						<tbody v-if="rawBody">
+							<tr>
+								<td><textarea name="raw" rows="7" style="width: 100%;"></textarea></td>
+							</tr>
+						</tbody>
 					</table>
 				</form>
 			</td>
 			<td style="width: 60%;">
-				<iframe name="target" @load="adjustTargetHeight()"></iframe>
+				<iframe name="target" @load="onResponse()"></iframe>
 			</td>
 		</tr>
 	</table>
