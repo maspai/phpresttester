@@ -66,8 +66,10 @@ new Vue({
 			this.rawBody = !!this.bodyType;
 		},
 		onResponse: function () {
+			var target = $('#wrapper iframe[name=target]');
+			target.height(0);
+
 			if (this.sendTime) {
-				var target = $('#wrapper iframe[name=target]');
 				target.height(target.contents().height());
 
 				var respTime = new Date(new Date - this.sendTime);
