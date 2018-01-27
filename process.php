@@ -27,8 +27,8 @@ $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 $header = substr($result, 0, $header_size);
 $result = substr($result, $header_size);
 curl_close($ch);
-if (stripos($result, "<html>") !== false) {
-	echo $result;
+if (stripos($result, "<html") !== false) {
+	echo $result . nl2br($header);
 }
 else {
 	if (stripos($content_type, 'application/json') !== false) {
@@ -40,9 +40,18 @@ else {
 		$header
 	);
 	?>
-	<h4 style="padding: 2px; margin: 0;">Headers</h4>
-	<pre style="padding: 2px; margin: 0; margin-left: 5px;"><?=$header?></pre>
+	<h4 style="padding: 2px; margin: 0;">
+		Headers
+		<button type="button" id="toggle-header">Show/hide</button>
+	</h4>
+	<pre id="headers" style="padding: 2px; margin: 0; margin-left: 5px; display: none;"><?=$header?></pre>
 	<h4 style="padding: 2px; margin: 0;">Body</h4>
 	<pre style="padding: 2px; margin: 0; margin-left: 5px;"><?=$result?></pre>
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<script type="text/javascript">
+		$('#toggle-header').click(function () {
+			$('#headers').toggle();
+		});
+	</script>
 	<?php
 }

@@ -94,7 +94,8 @@ endif
 				</form>
 			</td>
 			<td style="width: 60%;">
-				<iframe name="target" @load="onResponse()"></iframe>
+				<small v-if="sendTime">Sending request..</small>
+				<iframe name="target" @load="onResponse()" v-show="!sendTime"></iframe>
 			</td>
 		</tr>
 	</table>

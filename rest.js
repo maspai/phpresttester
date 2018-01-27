@@ -71,12 +71,22 @@ new Vue({
 
 			if (this.sendTime) {
 				target.height(target.contents().height());
+				var targetDoc = target.contents().get(0);
+				console.log(target.contents())
 
-				var respTime = new Date(new Date - this.sendTime);
-				this.responseTime = respTime.getSeconds() + ' s';
-				if (this.responseTime == '0 s') {
-					this.responseTime = respTime.getMilliseconds() + ' ms';
-				}
+				var msec = new Date - this.sendTime;
+				var hh = Math.floor(msec / 1000 / 60 / 60);
+				msec -= hh * 1000 * 60 * 60;
+				var mm = Math.floor(msec / 1000 / 60);
+				msec -= mm * 1000 * 60;
+				var ss = Math.floor(msec / 1000);
+				msec -= ss * 1000;
+
+				this.responseTime = hh > 0 ? hh + ' h' :
+									(mm > 0 ? mm + ' m' : 
+									(ss > 0 ? ss + ' s' :
+									msec + ' ms'));
+				this.sendTime = null;
 			}
 		},
 		sendRequest: function () {
