@@ -25,7 +25,7 @@ endif
 			<th>Request</th>
 			<th>
 				Response
-				<small style="font-weight: normal;" v-text="responseTime" v-if="responseTime !== null"></small>
+				<small style="font-weight: normal;" v-text="'(' + responseTime + ')'" v-if="responseTime !== null"></small>
 			</th>
 		</tr>
 		<tr>

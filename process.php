@@ -27,8 +27,22 @@ $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 $header = substr($result, 0, $header_size);
 $result = substr($result, $header_size);
 curl_close($ch);
-if (stripos($content_type, 'application/json') !== false) {
-	$result = json_encode(json_decode($result), JSON_PRETTY_PRINT);
-	header('content-type: application/json');
+if (stripos($result, "<html>") !== false) {
+	echo $result;
 }
-echo $result;
+else {
+	if (stripos($content_type, 'application/json') !== false) {
+		$result = json_encode(json_decode($result), JSON_PRETTY_PRINT);
+	}
+	$header = str_ireplace(
+		['200 OK', '500 Internal Server Error'],
+		['<span style="color: green">200 OK</span>', '<span style="color: red">500 Internal Server Error</span>'],
+		$header
+	);
+	?>
+	<h4 style="padding: 2px; margin: 0;">Headers</h4>
+	<pre style="padding: 2px; margin: 0; margin-left: 5px;"><?=$header?></pre>
+	<h4 style="padding: 2px; margin: 0;">Body</h4>
+	<pre style="padding: 2px; margin: 0; margin-left: 5px;"><?=$result?></pre>
+	<?php
+}

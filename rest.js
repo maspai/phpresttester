@@ -83,5 +83,17 @@ new Vue({
 			this.responseTime = null;
 			this.sendTime = new Date;
 		}
+		/*,getHistory: function (url) {
+			var history = localStorage.getItem('rest-history');
+			return history ?
+					(url ?
+						[] :
+						Array.apply(null, {length: history.length})
+							.map(function (x, n) {
+								return localStorage.getItem( localStorage.key(n) );
+							})
+					) :
+					[];
+		}*/
 	}
 });
